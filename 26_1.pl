@@ -72,10 +72,18 @@ sum_list(A,Sum):-sum_list(A,0,Sum).
 sum_list([],Sum,Sum):-!.
 sum_list([H|T],S,Sum):-S1 is S+H,sum_list(T,S1,Sum).
 
-pr3_2:-read(N),read_list(A,N),el_by_number(A,Ind,El),write(El).
+pr3_2:-read(N),read_list(A,N),read(Ind), el_by_number(A,Ind,El), write(El).
+
 el_by_number(A,Ind,El):-el_by_number(A,1,Ind,El).
+el_by_number([],_,_,nil):-!.
 el_by_number([El|_],Ind,Ind,El):-!.
 el_by_number([_|T],I,Ind,El):-I1 is I+1,el_by_number(T,I1,Ind,El).
+
+pr3_6:- read(N),read_list(A,N),reverse(A,B),write_list(B).
+
+reverse(A,B):-reverse(A,[],B).
+reverse([],B,B):-!.
+reverse([H|T],List,B):-reverse(T,[H|List],B).
 
 						
 						
