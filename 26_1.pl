@@ -85,6 +85,17 @@ reverse(A,B):-reverse(A,[],B).
 reverse([],B,B):-!.
 reverse([H|T],List,B):-reverse(T,[H|List],B).
 
+read_str(A,N):-get0(X),r_str(X,A,[],N,0).
+r_str(10,A,A,N,N):-!.
+r_str(X,A,B,N,K):-K1 is K+1,append(B,[X],B1),get0(X1),r_str(X1,A,B1,N,K1).
+
+write_str([]):-!.
+write_str([H|Tail]):-put(H),write_str(Tail).
+
+
+pr5_1:-read_str(A,N),write_str(A),write(", "),write_str(A),write(", "),
+					 write_str(A),write(", "),write(N).
+
 						
 						
 
