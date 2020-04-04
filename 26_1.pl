@@ -131,9 +131,12 @@ pr5_3:-read_str(A,N),get_words(A,Words,K),write_list_str(Words).
 write_list_str([]):-!.
 write_list_str([H|T]):-write_str(H),nl,write_list_str(T).
 
-1. Uniq_el(A,B) В элементы списка А без повторов
-2. count(El,List,Count) сколько раз El в списке
-3. номер минимального элемента списка (нумерация с 1).
+%1. Uniq_el(A,B) В элементы списка А без повторов
+%2. count(El,List,Count) сколько раз El в списке
+%3. номер минимального элемента списка (нумерация с 1).
+
+pr5_5:-	see('c:/Prolog/26_1_Prolog_F/1111.txt'),read_str(X,N),seen,
+		tell('c:/Prolog/26_1_Prolog_F/111.txt'), write(X),nl,write(N),told.
 
 
 
