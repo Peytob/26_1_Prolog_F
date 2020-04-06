@@ -85,10 +85,6 @@ reverse(A,B):-reverse(A,[],B).
 reverse([],B,B):-!.
 reverse([H|T],List,B):-reverse(T,[H|List],B).
 
-read_str(A,N):-get0(X),r_str(X,A,[],N,0).
-r_str(10,A,A,N,N):-!.
-r_str(X,A,B,N,K):-K1 is K+1,append(B,[X],B1),get0(X1),r_str(X1,A,B1,N,K1).
-
 write_str([]):-!.
 write_str([H|Tail]):-put(H),write_str(Tail).
 
@@ -126,17 +122,64 @@ get_words(A,Temp_words,B,I,K):-
 	I1 is I+1,append(Temp_words,[Word],T_w),get_words(A2,T_w,B,I1,K),!.
 get_words(_,B,B,K,K).
 
-pr5_3:-read_str(A,N),get_words(A,Words,K),write_list_str(Words).
+pr5_3:-read_str(A,N),get_words(A,Words,K),unique_elems(Words,U_words),
+		counts(U_words,C,Words),indOfMax(C,Ind),el_by_number(U_words,Ind,El),
+		write_str(El).
+
+
+counts([],[],_):-!.
+counts([Word|T_words],[Count|T_counts],Words):-
+	count(Word,Words,Count),counts(T_words,T_counts,Words).
 
 write_list_str([]):-!.
 write_list_str([H|T]):-write_str(H),nl,write_list_str(T).
 
 %1. Uniq_el(A,B) В элементы списка А без повторов
 %2. count(El,List,Count) сколько раз El в списке
-%3. номер минимального элемента списка (нумерация с 1).
+%3. номер мин имального элемента списка (нумерация с 1).
 
-pr5_5:-	see('c:/Prolog/26_1_Prolog_F/1111.txt'),read_str(X,N),seen,
-		tell('c:/Prolog/26_1_Prolog_F/111.txt'), write(X),nl,write(N),told.
+unique_elems([], []):- !.
+unique_elems([H|T], List2):- unique_elems([H|T], List2, []).
+unique_elems([], CurList, CurList):- !.
+unique_elems([H|T], List, []):- unique_elems(T, List, [H]), !.
+unique_elems([H|T], List, CurList):- 
+	not(contains(CurList, H)), append(CurList, [H], NewList), unique_elems(T, List, NewList), !.
+unique_elems([_|T], List, CurList):- unique_elems(T, List, CurList).
+
+contains([], _):- !, fail.
+contains([H|_], H):- !.
+contains([_|T], N):- contains(T, N).
+
+count(_, [], 0):-!.
+count(Elem, List, X):- count(Elem, List, 0, X).
+count(_, [], Count, Count):- !.
+count(Elem, [Elem|T], Count, X):- Count1 is Count + 1, count(Elem, T, Count1, X), !.
+count(Elem, [_|T], Count, X):- count(Elem, T, Count, X).
+
+indOfMax(X,Y):-indexOfMin(X,Y).
+indexOfMin([], -1):- !.
+indexOfMin([H|T], X):-indexOfMin(T, 1, 1, X, H).
+indexOfMin([], _, MinInd, MinInd, _):-!.
+indexOfMin([H|T], CurInd, _, X, CurMin):- 
+	H > CurMin, NewCurInd is CurInd + 1, indexOfMin(T, NewCurInd, NewCurInd, X, H), !.
+indexOfMin([_|T], CurInd, MinInd, X, CurMin):- 
+	NewCurInd is CurInd + 1, indexOfMin(T, NewCurInd, MinInd, X, CurMin).
+
+read_str(A,N,Flag):-get0(X),r_str(X,A,[],N,0,Flag).
+r_str(-1,A,A,N,N,1):-!.
+r_str(10,A,A,N,N,0):-!.
+r_str(X,A,B,N,K,Flag):-K1 is K+1,append(B,[X],B1),get0(X1),r_str(X1,A,B1,N,K1,Flag).
+
+read_list_str(List):-read_str(A,N,Flag),read_list_str([A],List,Flag).
+read_list_str(List,List,1):-!.
+read_list_str(Cur_list,List,0):-
+	read_str(A,N,Flag),append(Cur_list,[A],C_l),read_list_str(C_l,List,Flag).
+
+
+
+
+pr5_5:-	see('c:/Prolog/26_1_Prolog_F/1111.txt'),read_list_str(List),seen,
+		tell('c:/Prolog/26_1_Prolog_F/111.txt'), write_list_str(List),told.
 
 
 
