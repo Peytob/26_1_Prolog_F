@@ -181,14 +181,40 @@ read_list_str(Cur_list,List,0):-
 pr5_5:-	see('c:/Prolog/26_1_Prolog_F/1111.txt'),read_list_str(List),seen,
 		tell('c:/Prolog/26_1_Prolog_F/111.txt'), write_list_str(List),told.
 
+% -------
+% Задача 6, ПЗ 5. Реутов. Оно работало, мне аж что-то выдало правильное!
 
+% Количество элементов в списке.
+listLen(List, Len) :-
+	listLen(List, 0, Len).
 
+listLen([], CurrentLen, Out) :-
+	Out = CurrentLen, !.
 
+listLen([_|T], CurrentLen, Out) :-
+	CurrentLenNew is CurrentLen + 1,
+	listLen(T, CurrentLenNew, Out).
 
+% Поиск самой длинной строки в файле. (иниц-я)
+pr5_6(FilePath, MaxLen) :-
+	see(FilePath),
+	read_list_str(Lines),
+	pr5_6_getLongesList(Lines, MaxLen),
+	seen.
 
+% Поиск самого длинного списка в списке списков.
+pr5_6_getLongesList(Lines, Max) :-
+	pr5_6_getLongesList(Lines, 0, Max), !.
 
+pr5_6_getLongesList([H|T], CurrentMax, Max) :-
+	listLen(H, HL),
+	HL > CurrentMax,
+	pr5_6_getLongesList(T, HL, Max).
 
-						
-						
+pr5_6_getLongesList([H|T], CurrentMax, Max) :-
+	listLen(H, HL),
+	not(HL > CurrentMax),
+	pr5_6_getLongesList(T, CurrentMax, Max).
 
-
+pr5_6_getLongesList([], CurrentMax, Max) :-
+	Max = CurrentMax, !.
